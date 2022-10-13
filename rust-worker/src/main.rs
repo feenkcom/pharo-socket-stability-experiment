@@ -6,7 +6,6 @@ use std::net::TcpStream;
 use std::time::Duration;
 
 use clap::Parser;
-use rmpv::Value;
 
 use messages::*;
 use worker::*;
@@ -53,7 +52,6 @@ fn run_worker(args: Args) -> Result<(), Box<dyn Error>> {
             },
             Message::Err(_) => {}
             Message::Heartbeat => {
-                // on heartbeat send
                 worker.send_message(is_alive_message()?)?;
             }
             Message::Registered => {

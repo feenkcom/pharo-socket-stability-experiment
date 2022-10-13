@@ -99,7 +99,7 @@ impl Worker {
                                         self.registration_message_id = None;
                                         message = Message::Registered;
                                     }
-                                },
+                                }
                                 _ => {}
                             }
                         }
@@ -109,7 +109,7 @@ impl Worker {
                     cursor.position() as usize
                 }
                 Err(error) => match error.kind() {
-                    ErrorKind::WouldBlock => {
+                    ErrorKind::WouldBlock | ErrorKind::TimedOut => {
                         handler(&mut self, Message::Heartbeat)?;
                         0
                     }

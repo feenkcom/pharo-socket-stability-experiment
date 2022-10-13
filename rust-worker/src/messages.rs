@@ -1,14 +1,12 @@
-use rmpv::Value;
-use serde_json::Value as JSONValue;
 use std::collections::HashMap;
 use std::error::Error;
-use std::fs::File;
-use std::io::Write;
 
+use rmpv::Value;
+use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use serde::de::Error as SerdeDeError;
 use serde::ser::Error as SerdeSeError;
-use serde::{Deserialize, Deserializer, Serialize, Serializer};
-use serde_bytes::{ByteBuf, Bytes};
+use serde_bytes::ByteBuf;
+use serde_json::Value as JSONValue;
 use uuid::Uuid;
 
 use crate::Worker;
@@ -22,7 +20,7 @@ pub enum Message {
     Eval(EvalMessage),
     Err(ErrMessage),
     Heartbeat,
-    Registered
+    Registered,
 }
 
 impl Message {
