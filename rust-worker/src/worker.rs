@@ -12,9 +12,10 @@ use uuid::Uuid;
 pub struct Worker {
     attributes: WorkerAttributes,
     stream: TcpStream,
-    heartbeat: Option<Duration>,
     is_registered: bool,
     registration_message_id: Option<String>,
+    heartbeat: Option<Duration>,
+    work_duration: Option<Duration>
 }
 
 impl Worker {
@@ -27,6 +28,7 @@ impl Worker {
             heartbeat: None,
             is_registered: false,
             registration_message_id: None,
+            work_duration: None
         }
     }
 
@@ -41,6 +43,14 @@ impl Worker {
 
     pub fn set_heartbeat(&mut self, heartbeat: Option<Duration>) {
         self.heartbeat = heartbeat;
+    }
+
+    pub fn set_work_duration(&mut self, work_duration: Option<Duration>) {
+        self.work_duration = work_duration;
+    }
+
+    pub fn work_duration(&self) -> Option<&Duration> {
+        self.work_duration.as_ref()
     }
 
     pub fn attributes(&self) -> WorkerAttributes {

@@ -18,10 +18,16 @@ mod worker;
 #[command(author, version, about, long_about = None)]
 struct Args {
     /// Address in the format IP:PORT
-    #[arg(short, long)]
+    #[arg(long)]
     ip: Option<String>,
-    #[arg(short, long)]
+    #[arg(long)]
     port: Option<String>,
+    /// Amount of milliseconds between heartbeats
+    #[arg(long)]
+    heartbeat: Option<u64>,
+    /// For how long in milliseconds should the worker simulate task execution
+    #[arg(long, default_value_t = 2000)]
+    work: u64,
 }
 
 fn run_worker(args: Args) -> Result<(), Box<dyn Error>> {
@@ -34,7 +40,8 @@ fn run_worker(args: Args) -> Result<(), Box<dyn Error>> {
     info!("Connected to {}", stream.peer_addr()?);
 
     let mut worker = Worker::new(stream);
-    worker.set_heartbeat(Some(Duration::from_secs(2)));
+    worker.set_heartbeat(args.heartbeat.map(|millis| Duration::from_millis(millis)));
+    worker.set_work_duration(Some(Duration::from_millis(args.work)));
 
     worker.send_message(is_alive_message()?)?;
     worker.request_registration()?;
@@ -44,7 +51,10 @@ fn run_worker(args: Args) -> Result<(), Box<dyn Error>> {
         match message {
             Message::Eval(eval) => match eval.task_context_id() {
                 Ok(task_context_id) => {
-                    std::thread::sleep(Duration::from_secs(2));
+                    worker
+                        .work_duration()
+                        .map(|duration| std::thread::sleep(duration.clone()));
+
                     worker.send_message(task_result_message(task_context_id)?)?;
                     worker.send_message(next_task_for_worker_message(worker)?)?;
                 }
