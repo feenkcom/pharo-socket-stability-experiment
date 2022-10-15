@@ -56,7 +56,7 @@ impl IsAliveMessage {
 pub struct EnqueueMessage {
     statements: String,
     command_id: String,
-    bindings: HashMap<String, Vec<u8>>,
+    bindings: HashMap<String, ByteBuf>,
 }
 
 impl EnqueueMessage {
@@ -94,7 +94,7 @@ impl EnqueueMessage {
         V: Serialize + ?Sized,
     {
         let encoded = rmp_serde::to_vec_named(value)?;
-        self.bindings.insert(name.into(), encoded);
+        self.bindings.insert(name.into(), ByteBuf::from(encoded));
         Ok(())
     }
 }
