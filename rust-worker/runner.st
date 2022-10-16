@@ -2,7 +2,7 @@
 
 Smalltalk vm maxExternalSemaphoresSilently: 8192.
 
-RestartingStreamLogger stdout startFor: GtRemoteRunnerAnnouncement.
+RestartingStreamLogger stdout startFor: GtRrJobCompletedAnnouncement, GtRrWorkerUnregisteredAnnouncement, GtRrTaskCompletedAnnouncement..
 
 GtRemoteRunner hasUniqueInstance ifTrue:
 	[ GtRemoteRunner cleanUp ].
