@@ -31,6 +31,13 @@ Launch `500` workers (intended to be executed multiple times):
 .\start-rust-worker.ps1
 ```
 
+In both cases we observed identical crash:
+![windows-socket-crash-1](figures/Screenshot%202022-10-17%20at%2014.38.15.png)
+It probably crashes because one of the threads lives beyond the allHandles data structure that is freed on the third screenshot. We think that UI just makes it more likely to hit the bug. The same crash can be reproduced when running in the headless mode.
+
+![windows-socket-crash-2](figures/Screenshot%202022-10-17%20at%2014.39.01.png)
+![windows-socket-crash-3](figures/Screenshot%202022-10-17%20at%2014.39.53.png)
+
 ## Linux
 
 ### Previously observed crashes
